@@ -13,15 +13,14 @@ jobs:
         tar xf libmnl-1.0.5.tar.bz2
     - name: Build-libmnl
       run: |
-        parent=$(dirname $PWD)
-        PATH=$PATH;$parent/arm-linux-musleabi-cross/bin
+        PATH=$PATH:$GITHUB_WORKSPACE/arm-linux-musleabi-cross/bin
         ./configure --host=arm-linux CC=arm-linux-musleabi-gcc LDFLAGS=-static --prefix="$PWD/out"
         make
         make install
       working-directory: libmnl-1.0.5
     - name: Build
       run: |
-        PATH=$PATH;$PWD/arm-linux-musleabi-cross/bin
+        PATH=$PATH:$GITHUB_WORKSPACE/arm-linux-musleabi-cross/bin
         ./configure --prefix="$PWD/out" --host=arm-linux CC=arm-linux-musleabi-gcc MNL_CFLAGS="-I$PWD/libmnl-1.0.5/out/include" MNL_LIBS="-L$PWD/libmnl-1.0.5/out/lib -lmnl" LDFLAGS=-static
         make
         make install
