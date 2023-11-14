@@ -11,14 +11,19 @@ jobs:
         tar xf arm-linux-musleabi-cross.tgz
         wget -q https://www.netfilter.org/pub/libmnl/libmnl-1.0.5.tar.bz2
         tar xf libmnl-1.0.5.tar.bz2
-    - name: Build
+    - name: Build-libmnl
       run: |
         mkdir out
-        ./configure LDFLAGS=-static --prefix="$PWD/out"
+        ./configure --host=arm-linux CC=../arm-linux-musleabi-cross/bin/arm-linux-musleabi-gcc LDFLAGS=-static --prefix="$PWD/out"
         make
         make install
       working-directory: libmnl-1.0.5
+    - name: Build
+      run: |
+        ./configure --prefix="$PWD/out" --host=arm-linux CC=arm-linux-musleabi-cross/bin/arm-linux-musleabi-gcc MNL_CFLAGS="-I$PWD/libmnl-1.0.5/out/include" MNL_LIBS="-L$PWD/libmnl-1.0.5/out/lib -lmnl" LDFLAGS=-static
+        make
+        make install
     - uses: actions/upload-artifact@v3
       with:
-        name: libmnl
-        path: libmnl-1.0.5/out
+        name: ethtool
+        path: out
