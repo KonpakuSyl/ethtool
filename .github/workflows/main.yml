@@ -1,0 +1,24 @@
+name: Build
+on:
+  workflow_dispatch:
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@v3
+    - run: |
+        wget -q https://musl.cc/arm-linux-musleabi-cross.tgz
+        tar xf arm-linux-musleabi-cross.tgz
+        wget -q https://www.netfilter.org/pub/libmnl/libmnl-1.0.5.tar.bz2
+        tar xf libmnl-1.0.5.tar.bz2
+    - name: Build
+      run: |
+        mkdir out
+        ./configure LDFLAGS=-static --prefix="$PWD/out"
+        make
+        make install
+      working-directory: libmnl-1.0.5
+    - uses: actions/upload-artifact@v3
+      with:
+        name: libmnl
+        path: libmnl-1.0.5/out
