@@ -25,7 +25,7 @@ jobs:
         ./configure --prefix="$PWD/out" --host=arm-linux CC=arm-linux-musleabi-gcc MNL_CFLAGS="-I$PWD/libmnl-1.0.5/out/include" MNL_LIBS="-L$PWD/libmnl-1.0.5/out/lib -lmnl" LDFLAGS=-static
         make
         make install
-    - uses: actions/upload-artifact@v3
+    - uses: actions/upload-artifact@v4
       with:
         name: ethtool
         path: out
